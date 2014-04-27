@@ -24,23 +24,23 @@
 # setminv() stores the inverse of the matrix; and getminv() retrieves the inverse
 makeCacheMatrix <- function(x = matrix()) {
 
-  if(!(is.matrix(x))) stop("Error: The input to makeCacheMatrix must be a matrix.\n")
-  if(dim(x)[1] != dim(x)[2]) stop("Error: The input matrix must be square.\n")
+    if(!(is.matrix(x))) stop("Error: The input to makeCacheMatrix must be a matrix.\n")
+    if(dim(x)[1] != dim(x)[2]) stop("Error: The input matrix must be square.\n")
   
-  minv <- NULL
+    minv <- NULL
   
-  setm <- function(y) {
-    x <<- y
-    minv <<- NULL
-  }
+    setm <- function(y) {
+        x <<- y
+        minv <<- NULL
+    }
   
-  getm <- function() x
+    getm <- function() x
   
-  setminv <- function(minv) minv <<- solve(x)
+    setminv <- function(minv) minv <<- solve(x)
   
-  getminv <- function() minv
+    getminv <- function() minv
   
-  return(list(setm=setm, getm=getm, setminv=setminv, getminv=getminv))
+    return(list(setm=setm, getm=getm, setminv=setminv, getminv=getminv))
 }
 
 
@@ -50,15 +50,16 @@ makeCacheMatrix <- function(x = matrix()) {
 # If the inverse has already been computed and cached, it pulls the inverse from memory.
 cacheSolve <- function(x, ...) {
   
-  # check for the inverse in cache
-  minv <- x$getminv()
-  if(!(is.null(minv))) {
-    cat("Retrieving the matrix inverse from cache.\n") 
+    # check for the inverse in cache
+    minv <- x$getminv()
+    if(!(is.null(minv))) {
+        cat("Retrieving the matrix inverse from cache.\n") 
+        return(minv)
+    }
+    
+    # the inverse hasn't already been calculated and cached
+    mymatrix <- x$getm()
+    minv <- solve(mymatrix, ...)
+    x$setminv(minv)
     return(minv)
-  }
-  # the inverse hasn't already been calculated and cached
-  mymatrix <- x$getm()
-  minv <- solve(mymatrix, ...)
-  x$setminv(minv)
-  return(minv)
 }
